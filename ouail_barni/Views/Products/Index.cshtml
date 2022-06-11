@@ -1,0 +1,118 @@
+﻿@model IEnumerable<ouail_barni.Product>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+<form asp-contoller="products" asp-action="index" method="post">
+    <select name="CategoryID" id="CategoryID" class="col-md-4 form-control">
+        <option value="">All</option>
+        @foreach (Category c in ViewBag.cate)
+        {
+            <option @(Html.DisplayFor(m => c.CategoryID).ToString() == ViewBag.id ? "selected" : "")
+                    value="@Html.DisplayFor(m => c.CategoryID)">
+                @Html.DisplayFor(m => c.CategoryName)
+            </option>
+        }
+    </select>
+    <input type="submit" value="Search" id="Search" class="btn btn-default col-md-4">
+</form>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<div id="lstProduit">
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SupplierID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QuantityPerUnit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitsInStock)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitsOnOrder)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReorderLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Discontinued)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category.CategoryName)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SupplierID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QuantityPerUnit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnitPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnitsInStock)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnitsOnOrder)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReorderLevel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Discontinued)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ProductID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.ProductID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ProductID })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+@section Scripts {
+
+    <script type="text/javascript">
+        $("#Search").click(function () {
+            Data = "para=" + $("#CategoryID").val();
+
+            $.ajax({
+                type: "POST",
+                url: "/Products/remListe",
+                data: Data,
+
+                success: function (response) {
+                    $("#lstProduit").html(response);
+                }
+
+            });
+        });
+    </script>
+
+
+}
